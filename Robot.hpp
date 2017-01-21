@@ -16,10 +16,10 @@ private:
 
 	// robot parts:
 	RobotDrive myRobot; // drive train
-	Joystick driveCtl, shootCtl; // xbox360 controllers???
-	Compressor airPump; // compressor
-	Solenoid hamperLift; // piston to lift the hamper
-	DoubleSolenoid gearGrabber; // this is what holds the gear in place
+	Joystick xBox; // xbox360 controllers???
+	//Compressor airPump; // compressor
+	//Solenoid hamperLift; // piston to lift the hamper
+	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
 	BuiltInAccelerometer accel; // accelerometer in the RoboRIO
 
 	frc::LiveWindow* lw = LiveWindow::GetInstance();
