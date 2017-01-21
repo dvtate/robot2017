@@ -1,5 +1,5 @@
 /*
- * Robot.cpp
+ * Robot.hpp
  *
  *  Created on: Jan 17, 2017
  *      Author: tate
@@ -8,13 +8,15 @@
 #include "Robot.hpp"
 
 Robot::Robot():
-	myRobot(1, 2), // drive train
-	driveCtl(0), shootCtl(1), // xbox360 controllers???
-	airPump(0), // compressor
-	hamperLift(3), // piston to lift the hamper
-	gearGrabber(4, 5), // this is what holds the gear in place
+	myRobot(1, 0), // drive train
+	xBox(0), // xbox360 controllers???
+	//airPump(0), // compressor
+	//hamperLift(3), // piston to lift the hamper
+	//gearGrabber(4, 5), // this is what holds the gear in place
 	accel() // accelerometer in the RoboRIO
-{ }
+{
+	myRobot.SetExpiration(0.1);
+}
 
 
 void Robot::RobotInit() {
@@ -24,8 +26,13 @@ void Robot::RobotInit() {
 }
 
 void Robot::AutonomousInit() {
-	autoSelected = chooser.GetSelected();
 
+	// enable the motor controllers
+	myRobot.SetSafetyEnabled(false);
+
+
+
+	autoSelected = chooser.GetSelected();
 
 	// std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
 	std::cout << "Auto selected: " << autoSelected << std::endl;
@@ -46,6 +53,12 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
+
+	// enable the motor controllers
+	myRobot.SetSafetyEnabled(false);
+
+
+	myRobot.ArcadeDrive(xBox);
 
 }
 
