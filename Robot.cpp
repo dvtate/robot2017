@@ -6,6 +6,8 @@
  */
 
 #include "Robot.hpp"
+#include "utils.hpp"
+
 
 Robot::Robot():
 	myRobot(1, 0), // drive train
@@ -20,9 +22,16 @@ Robot::Robot():
 
 
 void Robot::RobotInit() {
+
+	// autonomous chooser code
 	chooser.AddDefault(autoNameDefault, autoNameDefault);
 	chooser.AddObject(autoNameCustom, autoNameCustom);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
+
+	//get camera feed and post it to the smartdashboard
+	//CameraServer::GetInstance()->SetQuality(50);
+	//CameraServer::GetInstance()->StartAutomaticCapture("cam0");// camera name in the web interface
+
 }
 
 void Robot::AutonomousInit() {
@@ -58,11 +67,21 @@ void Robot::TeleopInit() {
 	myRobot.SetSafetyEnabled(false);
 
 
-	myRobot.ArcadeDrive(xBox);
-
 }
 
 void Robot::TeleopPeriodic() {
+
+
+	// joystick data from previous cycle
+	static struct vector2_t { // `static` keeps this local variable in memory
+		float x = 0, y = 0;
+	} stick;
+
+	// drive the robot
+	myRobot.ArcadeDrive(
+		-utils::expReduceBrownout(xBox.GetRawAxis(1), stick.y) * 0.9f,
+		-utils::expReduceBrownout(xBox.GetRawAxis(0), stick.x) * 0.8f
+	);
 
 }
 
