@@ -1,8 +1,5 @@
-/*
- * Robot.hpp
- *
+/* Robot.hpp
  *  Created on: Jan 17, 2017
- *      Author: tate
  */
 
 #include "Robot.hpp"
@@ -29,9 +26,12 @@ void Robot::RobotInit() {
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
 	//get camera feed and post it to the smartdashboard
-	//CameraServer::GetInstance()->SetQuality(50);
-	//CameraServer::GetInstance()->StartAutomaticCapture("cam0");// camera name in the web interface
+	//CameraServer::GetInstance()-SetQuality(50);
+	CameraServer::GetInstance()->StartAutomaticCapture(0);// camera name in the web interface
 
+	CameraServer::GetInstance()->GetVideo();
+
+	CameraServer::GetInstance()->PutVideo("Blur", 640, 480);
 }
 
 void Robot::AutonomousInit() {
@@ -72,6 +72,18 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
 
 
+
+	static bool triggerable = true, isForward = true;
+
+	if (triggerable && xBox.GetRawButton(1)) {
+		isForward = !isForward;
+		triggerable = false;
+	} else if (!triggerable && !xBox.GetRawButton(1)) {
+		triggerable = true;
+
+	}
+
+
 	// joystick data from previous cycle
 	static struct vector2_t { // `static` keeps this local variable in memory
 		float x = 0, y = 0;
@@ -79,11 +91,11 @@ void Robot::TeleopPeriodic() {
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		-utils::expReduceBrownout(xBox.GetRawAxis(1), stick.y) * 0.9f,
+		utils::expReduceBrownout((isForward ? -1 : 1) * xBox.GetRawAxis(1), stick.y),
 		-utils::expReduceBrownout(xBox.GetRawAxis(0), stick.x) * 0.8f
 	);
 
-}
 
+}
 
 START_ROBOT_CLASS(Robot)
