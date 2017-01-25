@@ -1,8 +1,5 @@
-/*
- * utils.hpp
- *
+/* utils.hpp
  *  Created on: 23. jan. 2017
- *      Author: tate
  */
 
 #ifndef SRC_UTILS_HPP_
@@ -13,9 +10,8 @@
 namespace utils {
 
 	/// remove 'ghost-input' resulting from inaccurate joysticks
-	inline float removeGhost(const float val){
-		return (val > 0.15f || val < -0.15f) ? val : 0.0f;
-	}
+	inline float removeGhost(const float val)
+		{ return (val > 0.15f || val < -0.15f) ? val : 0.0f; }
 
 
 	/// a linear approach to preventing brownout (not effective)
