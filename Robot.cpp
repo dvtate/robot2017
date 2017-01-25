@@ -6,32 +6,33 @@
 #include "utils.hpp"
 
 
+
 Robot::Robot():
 	myRobot(1, 0), // drive train
 	xBox(0), // xbox360 controllers???
 	//airPump(0), // compressor
-	//hamperLift(3), // piston to lift the hamper
 	//gearGrabber(4, 5), // this is what holds the gear in place
+	sonar(1, 0),
 	accel() // accelerometer in the RoboRIO
 {
 	myRobot.SetExpiration(0.1);
 }
 
-
 void Robot::RobotInit() {
 
+	std::cout <<"Robot On" <<std::endl;
+
 	// autonomous chooser code
-	chooser.AddDefault(autoNameDefault, autoNameDefault);
-	chooser.AddObject(autoNameCustom, autoNameCustom);
+	chooser.AddDefault(autoDoNothing, autoDoNothing);
+	chooser.AddObject(autoDriveForward, autoDriveForward);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
 	//get camera feed and post it to the smartdashboard
-	//CameraServer::GetInstance()-SetQuality(50);
-	CameraServer::GetInstance()->StartAutomaticCapture(0);// camera name in the web interface
+	CameraServer::GetInstance()->StartAutomaticCapture(0).SetResolution(640, 480);
 
-	CameraServer::GetInstance()->GetVideo();
 
-	CameraServer::GetInstance()->PutVideo("Blur", 640, 480);
+	// enable the ultrasonic sensor
+	sonar.SetAutomaticMode(true);
 }
 
 void Robot::AutonomousInit() {
@@ -46,22 +47,33 @@ void Robot::AutonomousInit() {
 	// std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
 	std::cout << "Auto selected: " << autoSelected << std::endl;
 
-	if (autoSelected == autoNameCustom) {
-		// Custom Auto goes here
+	if (autoSelected == autoDoNothing) {
+
+
 	} else {
-		// Default Auto goes here
+		// drive forward for 2 seconds and stop
+		myRobot.Drive(0.75f, 0.0f);
+		Wait(2);
+		myRobot.Drive(0.0f, 0.0f);
 	}
 }
 
 void Robot::AutonomousPeriodic() {
-	if (autoSelected == autoNameCustom) {
-		// Custom Auto goes here
+	if (autoSelected == autoDoNothing) {
+
 	} else {
-		// Default Auto goes here
+
 	}
+
+	// put distance from ultrasonic in inches
+	frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
+
 }
 
 void Robot::TeleopInit() {
+
+	std::cout <<"Teleop has begun :))\n";
+
 
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
@@ -72,7 +84,7 @@ void Robot::TeleopInit() {
 void Robot::TeleopPeriodic() {
 
 
-
+	// turn a button into a switch
 	static bool triggerable = true, isForward = true;
 
 	if (triggerable && xBox.GetRawButton(1)) {
@@ -80,7 +92,6 @@ void Robot::TeleopPeriodic() {
 		triggerable = false;
 	} else if (!triggerable && !xBox.GetRawButton(1)) {
 		triggerable = true;
-
 	}
 
 
@@ -95,6 +106,10 @@ void Robot::TeleopPeriodic() {
 		-utils::expReduceBrownout(xBox.GetRawAxis(0), stick.x) * 0.8f
 	);
 
+
+
+	// put distance from ultrasonic in inches
+	frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
 
 }
 
