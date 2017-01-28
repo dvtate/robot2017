@@ -2,8 +2,8 @@
  *  Created on: 23. jan. 2017
  */
 
-#ifndef SRC_UTILS_HPP_
-#define SRC_UTILS_HPP_
+#ifndef FRC4941_UTILS_HPP
+#define FRC4941_UTILS_HPP
 
 
 /// a few useful functions for the robot
