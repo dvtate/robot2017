@@ -9,12 +9,10 @@
 
 Robot::Robot():
 	myRobot(1, 0), // drive train
-	xBox(0), // xbox360 controllers???
-	winch(2),
-	//airPump(0), // compressor
-	//gearGrabber(4, 5), // this is what holds the gear in place
-	sonar(1, 0),
-	accel() // accelerometer in the RoboRIO
+	xBox(0), 	   // xbox360 controller
+	winch(2),	   // climbing motor
+	winchLimit(2), // limit-switch for climbing
+	sonar(1, 0)	   // ultrasonic range finder
 {
 	myRobot.SetExpiration(0.1);
 }
@@ -88,10 +86,11 @@ void Robot::TeleopPeriodic() {
 	// turn a button into a switch
 	static bool triggerable = true, isForward = true;
 
-	if (triggerable && xBox.GetRawButton(1)) {
+	// Y switches directions
+	if (triggerable && xBox.GetRawButton(4)) {
 		isForward = !isForward;
 		triggerable = false;
-	} else if (!triggerable && !xBox.GetRawButton(1)) {
+	} else if (!triggerable && !xBox.GetRawButton(4)) {
 		triggerable = true;
 	}
 
@@ -111,15 +110,16 @@ void Robot::TeleopPeriodic() {
 	// control the winch for climbing
 	static bool climb = false;
 
-	// x starts climbing
-	if (xBox.GetRawButton(3))
+	// A starts climbing
+	if (xBox.GetRawButton(1))
 		climb = true;
-	// y stops climbing
-	else if (xBox.GetRawButton(4))
+	// B stops climbing
+	else if (xBox.GetRawButton(2))
 		climb = false;
 
 	// set it to full power or off depending on the value of climb
-	winch.Set(climb ? 1 : 0);
+	// if X button is pressed, un-wind the winch
+	winch.Set ( xBox.GetRawButton(3) ? -1 : (climb ? 1 : 0) );
 
 
 	// put distance from ultrasonic in inches
