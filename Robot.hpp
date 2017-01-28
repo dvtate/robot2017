@@ -12,13 +12,16 @@ class Robot: public frc::IterativeRobot {
 private:
 
 	// robot parts:
-	RobotDrive myRobot; // drive train
-	Joystick xBox; // xbox360 controllers???
-	VictorSP winch;
-	//Compressor airPump; // compressor
-	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
+	RobotDrive myRobot; 	 // drive train
+	Joystick xBox;			 // single xbox360 controller
+	VictorSP winch; 		 // used for climbing
+	DigitalInput winchLimit; // stops climbing when we get to the top
 	Ultrasonic sonar;
-	BuiltInAccelerometer accel; // accelerometer in the RoboRIO
+
+
+	//Compressor airPump;	 // compressor
+	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
+
 
 	frc::LiveWindow* lw = LiveWindow::GetInstance();
 
