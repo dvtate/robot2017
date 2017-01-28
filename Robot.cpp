@@ -10,6 +10,7 @@
 Robot::Robot():
 	myRobot(1, 0), // drive train
 	xBox(0), // xbox360 controllers???
+	winch(2),
 	//airPump(0), // compressor
 	//gearGrabber(4, 5), // this is what holds the gear in place
 	sonar(1, 0),
@@ -106,6 +107,19 @@ void Robot::TeleopPeriodic() {
 		-utils::expReduceBrownout(xBox.GetRawAxis(0), stick.x) * 0.8f
 	);
 
+
+	// control the winch for climbing
+	static bool climb = false;
+
+	// x starts climbing
+	if (xBox.GetRawButton(3))
+		climb = true;
+	// y stops climbing
+	else if (xBox.GetRawButton(4))
+		climb = false;
+
+	// set it to full power or off depending on the value of climb
+	winch.Set(climb ? 1 : 0);
 
 
 	// put distance from ultrasonic in inches
