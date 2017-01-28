@@ -1,7 +1,6 @@
 #ifndef ROBOT_HPP
 #define ROBOT_HPP
 
-
 #include <iostream>
 #include <memory>
 #include <string>
@@ -15,6 +14,7 @@ private:
 	// robot parts:
 	RobotDrive myRobot; // drive train
 	Joystick xBox; // xbox360 controllers???
+	VictorSP winch;
 	//Compressor airPump; // compressor
 	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
 	Ultrasonic sonar;
@@ -55,7 +55,5 @@ public:
 
 
 };
-
-
 
 #endif
