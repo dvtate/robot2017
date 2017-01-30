@@ -1,5 +1,5 @@
 # main-bot-2017
-This will be out primary robot unless the testing bot works flawlessly
+This will be our primary robot unless the testing bot works flawlessly and provides a better system.
 
 # Rules for editing:
  - Put all changes in your commit.
