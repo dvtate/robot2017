@@ -12,7 +12,8 @@ Robot::Robot():
 	xBox(0), 	   // xbox360 controller
 	winch(2),	   // climbing motor
 	winchLimit(2), // limit-switch for climbing
-	sonar(1, 0)	   // ultrasonic range finder
+	sonar(1, 0),	   // ultrasonic range finder
+	gyro(0)
 {
 	myRobot.SetExpiration(0.1);
 }
@@ -24,6 +25,10 @@ void Robot::RobotInit() {
 	// autonomous chooser code
 	chooser.AddDefault(autoDoNothing, autoDoNothing);
 	chooser.AddObject(autoDriveForward, autoDriveForward);
+	chooser.AddObject(autoGoMiddle, autoGoMiddle);
+	chooser.AddObject(autoGyroFun, autoGyroFun);
+	chooser.AddObject(autoLeftTurnRight, autoLeftTurnRight);
+	chooser.AddObject(autoRightTurnLeft, autoRightTurnLeft);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
 	//get camera feed and post it to the smartdashboard
@@ -34,6 +39,10 @@ void Robot::RobotInit() {
 	sonar.SetAutomaticMode(true);
 }
 
+
+// delete me later ********************************************************
+double gyroAngle;
+// XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 void Robot::AutonomousInit() {
 
 	// enable the motor controllers
@@ -48,6 +57,68 @@ void Robot::AutonomousInit() {
 
 	if (autoSelected == autoDoNothing) {
 
+	// go to middle peg and deposit the gear
+	} else if (autoSelected == autoGoMiddle) {
+
+		// drive forward 100in to the middle peg
+		while (sonar.GetRangeInches() < 100)
+			myRobot.Drive(0.5f, 0.0f);
+
+		// stop moving
+		myRobot.Drive(0.0f, 0.0f);
+
+	} else if (autoSelected == autoGyroFun) {
+		gyro.Reset();
+		gyroAngle = gyro.GetAngle();
+
+	} else if (autoSelected == autoLeftTurnRight) {
+
+		// reset gyro
+		gyro.Reset();
+
+		// drive forward 200in to the turning point
+		while (sonar.GetRangeInches() < 200)
+			myRobot.Drive(0.5f, 0.0f);
+
+		// stop moving
+		myRobot.Drive(0.0f, 0.0f);
+
+		// turn 315 degrees
+		gyroAngle = gyro.GetAngle() + 315;
+		while (gyroAngle > gyro.GetAngle())
+			myRobot.Drive(0.0f, 0.3f);
+
+		// drive forward 6ft to the left peg
+		while (sonar.GetRangeInches() < 72)
+			myRobot.Drive(0.5f, 0.0f);
+
+
+		// stop moving
+		myRobot.Drive(0.0f, 0.0f);
+
+	} else if (autoSelected == autoLeftTurnRight) {
+
+		// reset gyro
+		gyro.Reset();
+
+		// drive forward 200in to the turning point
+		while (sonar.GetRangeInches() < 200)
+			myRobot.Drive(0.5f, 0.0f);
+
+		// stop moving
+		myRobot.Drive(0.0f, 0.0f);
+
+		// turn 315 degrees
+		gyroAngle = gyro.GetAngle() - 315;
+		while (gyroAngle <  gyro.GetAngle())
+			myRobot.Drive(0.0f, -0.3f);
+
+		// drive forward 6ft to the left peg
+		while (sonar.GetRangeInches() < 72)
+			myRobot.Drive(0.5f, 0.0f);
+
+		// stop moving
+		myRobot.Drive(0.0f, 0.0f);
 
 	} else {
 		// drive forward for 2 seconds and stop
@@ -58,8 +129,8 @@ void Robot::AutonomousInit() {
 }
 
 void Robot::AutonomousPeriodic() {
-	if (autoSelected == autoDoNothing) {
-
+	if (autoSelected == autoGyroFun) {
+		frc::SmartDashboard::PutNumber("Gyro get measurement: ", gyro.GetAngle() - gyroAngle);
 	} else {
 
 	}
@@ -119,7 +190,7 @@ void Robot::TeleopPeriodic() {
 
 	// set it to full power or off depending on the value of climb
 	// if X button is pressed, un-wind the winch
-	winch.Set ( xBox.GetRawButton(3) ? -1 : (climb ? 1 : 0) );
+	winch.Set(xBox.GetRawButton(3) ? -1 : (climb ? 1 : 0));
 
 
 	// put distance from ultrasonic in inches
