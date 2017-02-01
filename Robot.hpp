@@ -16,8 +16,8 @@ private:
 	Joystick xBox;			 // single xbox360 controller
 	VictorSP winch; 		 // used for climbing
 	DigitalInput winchLimit; // stops climbing when we get to the top
-	Ultrasonic sonar;
-
+	Ultrasonic sonar;		 // distance probe
+	ADXRS450_Gyro gyro;		 // get angles and stuff
 
 	//Compressor airPump;	 // compressor
 	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
@@ -29,6 +29,10 @@ private:
 	frc::SendableChooser<std::string> chooser;
 	const std::string autoDriveForward = "drive forward 2s";
 	const std::string autoDoNothing = "sit and wait";
+	const std::string autoGoMiddle = "drive to middle peg";
+	const std::string autoGyroFun = "play with gyro :)";
+	const std::string autoLeftTurnRight = "start left goto the left peg";
+	const std::string autoRightTurnLeft = "start right goto the right peg";
 	std::string autoSelected;
 
 public:
