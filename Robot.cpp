@@ -13,7 +13,7 @@ Robot::Robot():
 	winch(2),	   // climbing motor
 	winchLimit(2), // limit-switch for climbing
 	sonar(1, 0),	   // ultrasonic range finder
-	gyro(0)
+	gyro()
 {
 	myRobot.SetExpiration(0.1);
 }
@@ -131,6 +131,7 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() {
 	if (autoSelected == autoGyroFun) {
 		frc::SmartDashboard::PutNumber("Gyro get measurement: ", gyro.GetAngle() - gyroAngle);
+		std::cout <<"gyro = " <<gyro.GetAngle() - gyroAngle <<std::endl;
 	} else {
 
 	}
@@ -173,7 +174,7 @@ void Robot::TeleopPeriodic() {
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		utils::expReduceBrownout((isForward ? -1 : 1) * xBox.GetRawAxis(1), stick.y),
+		utils::expReduceBrownout((isForward ? 1 : -1) * xBox.GetRawAxis(1), stick.y),
 		-utils::expReduceBrownout(xBox.GetRawAxis(0), stick.x) * 0.8f
 	);
 
