@@ -8,11 +8,11 @@
 
 
 Robot::Robot():
-	myRobot(1, 0), // drive train
+	myRobot(0, 0, 1, 2), // drive train
 	xBox(0), 	   // xbox360 controller
 	winch(2),	   // climbing motor
 	winchLimit(2), // limit-switch for climbing
-	sonar(1, 0),	   // ultrasonic range finder
+	sonar(1, 0),// ultrasonic range finder
 	gyro()
 {
 	myRobot.SetExpiration(0.1);
@@ -61,8 +61,8 @@ void Robot::AutonomousInit() {
 	} else if (autoSelected == autoGoMiddle) {
 
 		// drive forward 100in to the middle peg
-		while (sonar.GetRangeInches() < 100)
-			myRobot.Drive(0.5f, 0.0f);
+		while (sonar.GetRangeInches() > 24)
+			myRobot.Drive(0.4f, 0.0f);
 
 		// stop moving
 		myRobot.Drive(0.0f, 0.0f);
@@ -174,8 +174,8 @@ void Robot::TeleopPeriodic() {
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		utils::expReduceBrownout((isForward ? 1 : -1) * xBox.GetRawAxis(1), stick.y),
-		-utils::expReduceBrownout(xBox.GetRawAxis(0), stick.x) * 0.8f
+		utils::expReduceBrownout((isForward ? -1 : 1) * xBox.GetRawAxis(1), stick.y),
+		-utils::expReduceBrownout(xBox.GetRawAxis(4), stick.x) * 0.8f
 	);
 
 
