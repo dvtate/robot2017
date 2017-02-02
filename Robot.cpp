@@ -1,7 +1,3 @@
-/* Robot.hpp
- *  Created on: Jan 17, 2017
- */
-
 #include "Robot.hpp"
 #include "utils.hpp"
 
