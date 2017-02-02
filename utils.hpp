@@ -1,7 +1,3 @@
-/* utils.hpp
- *  Created on: 23. jan. 2017
- */
-
 #ifndef FRC4941_UTILS_HPP
 #define FRC4941_UTILS_HPP
 
