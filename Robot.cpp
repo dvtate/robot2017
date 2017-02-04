@@ -10,7 +10,7 @@
 Robot::Robot():
 	myRobot(0, 0, 1, 2), // drive train
 	xBox(0), 	   		 // xbox360 controller
-	winch(2),	   		 // climbing motor
+	winch(3),	   		 // climbing motor
 	winchLimit(2), 		 // limit-switch for climbing
 	sonar(1, 0),   		 // ultrasonic range finder
 	gyro()
