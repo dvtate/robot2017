@@ -1,7 +1,3 @@
-/* Robot.hpp
- *  Created on: Jan 17, 2017
- */
-
 #include "Robot.hpp"
 #include "utils.hpp"
 
@@ -9,10 +5,10 @@
 
 Robot::Robot():
 	myRobot(0, 0, 1, 2), // drive train
-	xBox(0), 	   		 // xbox360 controller
-	winch(3),	   		 // climbing motor
-	winchLimit(2), 		 // limit-switch for climbing
-	sonar(1, 0),   		 // ultrasonic range finder
+	xBox(0), 	   // xbox360 controller
+	winch(3),	   // climbing motor
+	winchLimit(2), // limit-switch for climbing
+	sonar(1, 0),// ultrasonic range finder
 	gyro()
 {
 	myRobot.SetExpiration(0.1);
@@ -43,6 +39,8 @@ void Robot::RobotInit() {
 // delete me later ********************************************************
 double gyroAngle;
 // XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+
+
 void Robot::AutonomousInit() {
 
 	// enable the motor controllers
