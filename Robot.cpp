@@ -181,14 +181,15 @@ void Robot::TeleopPeriodic() {
 	static bool climb = false;
 
 	// A starts climbing
-	if (xBox.GetRawButton(1))
+	if (xBox.GetRawButton(1)) {
 		climb = true;
+		std::cout <<"Do you even lift???" <<std::endl;
 	// B stops climbing
-	else if (xBox.GetRawButton(2))
+	} else if (xBox.GetRawButton(2))
 		climb = false;
 
 	// set it on or off depending on the value of climb
-	winch.Set(climb ? 0.5f : 0);
+	winch.Set(climb ? 0.70f : 0);
 
 
 	// put distance from ultrasonic in inches
