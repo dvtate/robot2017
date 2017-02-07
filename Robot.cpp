@@ -9,7 +9,7 @@ Robot::Robot():
 	winch(3),	   // climbing motor
 	winchLimit(2), // limit-switch for climbing
 	sonar(1, 0),// ultrasonic range finder
-	gyro()
+	ADXRS450_Gyro()
 {
 	myRobot.SetExpiration(0.1);
 }
