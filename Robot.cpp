@@ -9,7 +9,7 @@ Robot::Robot():
 	winch(3),	   // climbing motor
 	winchLimit(2), // limit-switch for climbing
 	sonar(1, 0),// ultrasonic range finder
-	ADXRS450_Gyro()
+	gyro()
 {
 	myRobot.SetExpiration(0.1);
 }
@@ -36,14 +36,16 @@ void Robot::RobotInit() {
 }
 
 
-// delete me later (thiis associated with the gyro-fun auto mode used for testing) 
+// delete me later (this associated with the gyro-fun auto mode used for testing)
 double gyroAngle;
+// XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 
 
 void Robot::AutonomousInit() {
 
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
+
 
 	autoSelected = chooser.GetSelected();
 
@@ -55,14 +57,20 @@ void Robot::AutonomousInit() {
 	// go to middle peg and deposit the gear
 	} else if (autoSelected == autoGoMiddle) {
 
-		// drive forward 100in to the middle peg
-		while (sonar.GetRangeInches() > 24)
-			myRobot.Drive(0.4f, 0.0f);
+		gyro.Reset();
+
+		#define GYRO_TURNING_CONST 0.03
+
+		// drive *straight* forward 24in from the middle peg
+		while (sonar.GetRangeInches() > 24) {
+			myRobot.Drive(0.4f, GYRO_TURNING_CONST * -gyro.GetAngle());
+			Wait(0.004);
+		}
 
 		// stop moving
 		myRobot.Drive(0.0f, 0.0f);
-		
-		// at this point the human plaayer would lift the gear 
+
+		// at this point the human player would lift the gear
 		// out of the robots pocket and earn us a fuckton of
 		// points to start the game on a good footing
 
@@ -94,11 +102,12 @@ void Robot::AutonomousInit() {
 
 		// stop moving
 		myRobot.Drive(0.0f, 0.0f);
-		
-		// at this point the human plaayer would lift the gear 
+
+		// at this point the human player would lift the gear
 		// out of the robots pocket and earn us a fuckton of
 		// points to start the game on a good footing
-		
+
+
 	} else if (autoSelected == autoLeftTurnRight) {
 
 		// reset gyro
@@ -122,8 +131,8 @@ void Robot::AutonomousInit() {
 
 		// stop moving
 		myRobot.Drive(0.0f, 0.0f);
-		
-		// at this point the human plaayer would lift the gear 
+
+		// at this point the human player would lift the gear
 		// out of the robots pocket and earn us a fuckton of
 		// points to start the game on a good footing
 
