@@ -36,17 +36,14 @@ void Robot::RobotInit() {
 }
 
 
-// delete me later ********************************************************
+// delete me later (thiis associated with the gyro-fun auto mode used for testing) 
 double gyroAngle;
-// XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 
 
 void Robot::AutonomousInit() {
 
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
-
-
 
 	autoSelected = chooser.GetSelected();
 
@@ -64,6 +61,10 @@ void Robot::AutonomousInit() {
 
 		// stop moving
 		myRobot.Drive(0.0f, 0.0f);
+		
+		// at this point the human plaayer would lift the gear 
+		// out of the robots pocket and earn us a fuckton of
+		// points to start the game on a good footing
 
 	} else if (autoSelected == autoGyroFun) {
 		gyro.Reset();
@@ -93,7 +94,11 @@ void Robot::AutonomousInit() {
 
 		// stop moving
 		myRobot.Drive(0.0f, 0.0f);
-
+		
+		// at this point the human plaayer would lift the gear 
+		// out of the robots pocket and earn us a fuckton of
+		// points to start the game on a good footing
+		
 	} else if (autoSelected == autoLeftTurnRight) {
 
 		// reset gyro
@@ -117,6 +122,10 @@ void Robot::AutonomousInit() {
 
 		// stop moving
 		myRobot.Drive(0.0f, 0.0f);
+		
+		// at this point the human plaayer would lift the gear 
+		// out of the robots pocket and earn us a fuckton of
+		// points to start the game on a good footing
 
 	} else {
 		// drive forward for 2 seconds and stop
