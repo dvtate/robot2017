@@ -9,7 +9,8 @@ Robot::Robot():
 	winch(3),	   // climbing motor
 	winchLimit(2), // limit-switch for climbing
 	sonar(1, 0),// ultrasonic range finder
-	gyro()
+	gyro(),
+	camLight(3)
 {
 	myRobot.SetExpiration(0.1);
 }
@@ -33,6 +34,10 @@ void Robot::RobotInit() {
 
 	// enable the ultrasonic sensor
 	sonar.SetAutomaticMode(true);
+
+	// turn on the camera LED Ring
+	camLight.Set(Relay::kOn);
+
 }
 
 
@@ -165,21 +170,34 @@ void Robot::TeleopInit() {
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
 
+	// turn off the light
+	camLight.Set(Relay::kReverse);
+
 
 }
 
 void Robot::TeleopPeriodic() {
 
-
 	// turn a button into a switch
-	static bool triggerable = true, isForward = true;
+	static bool dir_reversable = true, isForward = true;
 
 	// Y switches directions
-	if (triggerable && xBox.GetRawButton(4)) {
+	if (dir_reversable && xBox.GetRawButton(4)) {
 		isForward = !isForward;
-		triggerable = false;
-	} else if (!triggerable && !xBox.GetRawButton(4)) {
-		triggerable = true;
+		dir_reversable = false;
+	} else if (!dir_reversable && !xBox.GetRawButton(4)) {
+		dir_reversable = true;
+	}
+
+	// turn a button into a switch
+	static bool slowable = true, isFast = true;
+
+	// Y switches directions
+	if (slowable && xBox.GetRawButton(4)) {
+		isForward = !isForward;
+		slowable = false;
+	} else if (!slowable && !xBox.GetRawButton(4)) {
+		slowable = true;
 	}
 
 
@@ -190,7 +208,8 @@ void Robot::TeleopPeriodic() {
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		utils::expReduceBrownout((isForward ? -1 : 1) * xBox.GetRawAxis(1), stick.y),
+		utils::expReduceBrownout((isFast ? 1 : 0.25f) * (isForward ? -1 : 1)
+								 * xBox.GetRawAxis(1), stick.y),
 		-utils::expReduceBrownout(xBox.GetRawAxis(4), stick.x) * 0.8f
 	);
 
@@ -207,11 +226,16 @@ void Robot::TeleopPeriodic() {
 		climb = false;
 
 	// set it on or off depending on the value of climb
-	winch.Set(climb ? 0.70f : 0);
+	winch.Set(climb ? 1 : 0);
 
 
 	// put distance from ultrasonic in inches
 	frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
+
+}
+
+void Robot::RobotPeriodic(){
+		frc::SmartDashboard::PutBoolean("Gear: ", sonar.GetRangeInches() < 5);
 
 }
 
