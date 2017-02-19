@@ -10,8 +10,12 @@ namespace utils {
 	inline float removeGhost(const float val)
 		{ return (val > 0.15f || val < -0.15f) ? val : 0.0f; }
 
+	/// plots input on a curve to make driving different
+	inline float unsignedSqrt(const float val)
+		{ return val > 0 ? sqrt(val) : -sqrt(-val); }
 
-	/// a linear approach to preventing brownout (not effective)
+
+	/// a linear approach to preventing brownout (not effective) (probably doesn't work)
 	float linReduceBrownout(const float limit, const float current, float& past){
 		/// limit = maximum ammount of change per cycle
 		/// current = the most recent value coming from input
@@ -38,10 +42,8 @@ namespace utils {
 
 
 	// an exponential approach to preventing brownout (also gives more reasonable responses)
-	float expReduceBrownout(const float current, float& past){
-		return ((past = ((past + utils::removeGhost(current)) / 2)) >= 0) ?
-			sqrt(past) : -sqrt(-past);
-	}
+	inline float expReduceBrownout(const float current, float& past)
+		{ return unsignedSqrt(past = ((past + utils::removeGhost(current)) / 2)); }
 
 }
 
