@@ -18,6 +18,7 @@ private:
 	DigitalInput winchLimit; // stops climbing when we get to the top
 	Ultrasonic sonar;		 // distance probe
 	ADXRS450_Gyro gyro;		 // get angles and stuff
+	Relay camLight;
 
 	//Compressor airPump;	 // compressor
 	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
@@ -39,21 +40,23 @@ public:
 
 	Robot();
 
-	void RobotInit();
-	void AutonomousInit();
-	void AutonomousPeriodic();
+	void RobotInit() override;
+	void RobotPeriodic() override;
 
-	void TeleopInit();
-	void TeleopPeriodic();
+	void AutonomousInit() override;
+	void AutonomousPeriodic() override;
 
-	void TestInit()
+	void TeleopInit() override;
+	void TeleopPeriodic() override;
+
+	void TestInit() override
 		{ std::cout <<"testing something?" <<std::endl; }
-	void TestPeriodic()
+	void TestPeriodic() override
 		{ lw->Run(); }
 
-	void DisabledInit()
+	void DisabledInit() override
 		{ std::cout <<"Robot disabled" <<std::endl;	}
-	void DisabledPeriodic()
+	void DisabledPeriodic() override
 	{
 		// put distance from ultrasonic in inches
 		frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
