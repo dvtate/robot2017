@@ -4,13 +4,12 @@
 
 
 Robot::Robot():
-	myRobot(0, 0, 1, 2), // drive train
-	xBox(0), 	   // xbox360 controller
-	winch(3),	   // climbing motor
-	winchLimit(2), // limit-switch for climbing
-	sonar(1, 0),// ultrasonic range finder
-	gyro(),
-	camLight(3)
+	myRobot(0, 1),		// drive train
+	xBox(0), climber(1),// xbox360 controller
+	winch(3),	   		// climbing motor
+	winchLimit(2), 		// limit-switch for climbing
+	sonar(1, 0),		// ultrasonic range finder
+	gyro()
 {
 	myRobot.SetExpiration(0.1);
 }
@@ -34,9 +33,6 @@ void Robot::RobotInit() {
 
 	// enable the ultrasonic sensor
 	sonar.SetAutomaticMode(true);
-
-	// turn on the camera LED Ring
-	camLight.Set(Relay::kOn);
 
 }
 
@@ -170,15 +166,12 @@ void Robot::TeleopInit() {
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
 
-	// turn off the light
-	camLight.Set(Relay::kReverse);
-
 
 }
 
 void Robot::TeleopPeriodic() {
 
-	// turn a button into a switch
+		// turn a button into a switch
 	static bool dir_reversable = true, isForward = true;
 
 	// Y switches directions
@@ -213,7 +206,7 @@ void Robot::TeleopPeriodic() {
 		-utils::expReduceBrownout(xBox.GetRawAxis(4), stick.x) * 0.8f
 	);
 
-
+/*
 	// control the winch for climbing
 	static bool climb = false;
 
@@ -224,9 +217,10 @@ void Robot::TeleopPeriodic() {
 	// B stops climbing
 	} else if (xBox.GetRawButton(2))
 		climb = false;
+*/
 
-	// set it on or off depending on the value of climb
-	winch.Set(climb ? 1 : 0);
+	// set it on or off depending on the value of climber.leftTrigger
+	winch.Set(climber.GetRawAxis(2) > 0.60 ? 1 : 0);
 
 
 	// put distance from ultrasonic in inches
