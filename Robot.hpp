@@ -13,12 +13,11 @@ private:
 
 	// robot parts:
 	RobotDrive myRobot; 	 // drive train
-	Joystick xBox;			 // single xbox360 controller
+	Joystick xBox, climber;			 // single xbox360 controller
 	VictorSP winch; 		 // used for climbing
 	DigitalInput winchLimit; // stops climbing when we get to the top
 	Ultrasonic sonar;		 // distance probe
 	ADXRS450_Gyro gyro;		 // get angles and stuff
-	Relay camLight;
 
 	//Compressor airPump;	 // compressor
 	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
