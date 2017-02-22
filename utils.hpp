@@ -9,22 +9,23 @@
 namespace utils {
 
 	/// remove 'ghost-input' resulting from inaccurate joysticks
+	// input < 15% gets ignored
 	inline double removeGhost(const double val)
 		{ return (val > 0.15 || val < -0.15) ? val : 0.0; }
 
 
 	/// a linear approach to preventing brownout (untested)
 	// could probably be combined with expReduceBrounout to improve effectiveness
-	float linReduceBrownout(const float limit, const float current, float& past)
+	double linReduceBrownout(const double limit, const double current, double& past)
 	{
 		/// limit = maximum amount of change per cycle
 		/// current = the most recent value coming from input
 		/// past = the value returned by this function in the last frame
 
 		// null or ghost input doesn't affect robot (also good for breaking)
-		if (utils::removeGhost(current) == 0.0f) return 0.0f;
+		if (utils::removeGhost(current) == 0.0f) return 0.0;
 
-		float change = current - past;
+		double change = current - past;
 
 		if (change > 0) { // increase speed
 			if (change > limit) // too much change
@@ -44,9 +45,14 @@ namespace utils {
 	inline double unsignedSqrt(const double val)
 		{ return val > 0 ? sqrt(val) : -sqrt(-val); }
 
+	/// plots input on a curve to make driving different
+	inline double unsignedPow2(const double val)
+		{ return val > 0 ? pow(val, 2) : -pow(val, 2); }
+
 	/// an exponential approach to preventing brown-out (also gives more reasonable responses)
 	/// averages in the previous value to make the change less drastic
-	inline float expReduceBrownout(const double current, double& past)
+	// TODO: try using a cubic curve
+	inline double expReduceBrownout(const double current, double& past)
 		{ return unsignedSqrt(past = ((past + utils::removeGhost(current)) / 2)); }
 
 
