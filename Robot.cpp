@@ -22,7 +22,6 @@ void Robot::RobotInit() {
 	chooser.AddDefault(autoDoNothing, autoDoNothing);
 	chooser.AddObject(autoDriveForward, autoDriveForward);
 	chooser.AddObject(autoGoMiddle, autoGoMiddle);
-	chooser.AddObject(autoGyroFun, autoGyroFun);
 	chooser.AddObject(autoLeftTurnRight, autoLeftTurnRight);
 	chooser.AddObject(autoRightTurnLeft, autoRightTurnLeft);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
@@ -35,11 +34,6 @@ void Robot::RobotInit() {
 	sonar.SetAutomaticMode(true);
 
 }
-
-
-// delete me later (this associated with the gyro-fun auto mode used for testing)
-double gyroAngle;
-// XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 
 
 void Robot::AutonomousInit() {
@@ -64,20 +58,16 @@ void Robot::AutonomousInit() {
 
 		// drive *straight* forward 24in from the middle peg
 		while (sonar.GetRangeInches() > 24) {
-			myRobot.Drive(0.4f, GYRO_TURNING_CONST * -gyro.GetAngle());
+			myRobot.Drive(0.4, GYRO_TURNING_CONST * -gyro.GetAngle());
 			Wait(0.004);
 		}
 
 		// stop moving
-		myRobot.Drive(0.0f, 0.0f);
+		myRobot.Drive(0.0, 0.0);
 
 		// at this point the human player would lift the gear
 		// out of the robots pocket and earn us a fuckton of
 		// points to start the game on a good footing
-
-	} else if (autoSelected == autoGyroFun) {
-		gyro.Reset();
-		gyroAngle = gyro.GetAngle();
 
 	} else if (autoSelected == autoLeftTurnRight) {
 
@@ -86,23 +76,23 @@ void Robot::AutonomousInit() {
 
 		// drive forward 200in to the turning point
 		while (sonar.GetRangeInches() < 200)
-			myRobot.Drive(0.5f, 0.0f);
+			myRobot.Drive(0.5, 0.0);
 
 		// stop moving
-		myRobot.Drive(0.0f, 0.0f);
+		myRobot.Drive(0.0, 0.0);
 
 		// turn 315 degrees
-		gyroAngle = gyro.GetAngle() + 315;
+		double gyroAngle = gyro.GetAngle() + 315;
 		while (gyroAngle > gyro.GetAngle())
-			myRobot.Drive(0.0f, 0.3f);
+			myRobot.Drive(0.0, 0.3);
 
 		// drive forward 6ft to the left peg
 		while (sonar.GetRangeInches() < 72)
-			myRobot.Drive(0.5f, 0.0f);
+			myRobot.Drive(0.5, 0.0);
 
 
 		// stop moving
-		myRobot.Drive(0.0f, 0.0f);
+		myRobot.Drive(0.0, 0.0);
 
 		// at this point the human player would lift the gear
 		// out of the robots pocket and earn us a fuckton of
@@ -116,22 +106,22 @@ void Robot::AutonomousInit() {
 
 		// drive forward 200in to the turning point
 		while (sonar.GetRangeInches() < 200)
-			myRobot.Drive(0.5f, 0.0f);
+			myRobot.Drive(0.5, 0.0);
 
 		// stop moving
-		myRobot.Drive(0.0f, 0.0f);
+		myRobot.Drive(0.0, 0.0);
 
 		// turn 315 degrees
-		gyroAngle = gyro.GetAngle() - 315;
+		double gyroAngle = gyro.GetAngle() - 315;
 		while (gyroAngle <  gyro.GetAngle())
-			myRobot.Drive(0.0f, -0.3f);
+			myRobot.Drive(0.0, -0.3);
 
 		// drive forward 6ft to the left peg
 		while (sonar.GetRangeInches() < 72)
-			myRobot.Drive(0.5f, 0.0f);
+			myRobot.Drive(0.5, 0.0);
 
 		// stop moving
-		myRobot.Drive(0.0f, 0.0f);
+		myRobot.Drive(0.0, 0.0);
 
 		// at this point the human player would lift the gear
 		// out of the robots pocket and earn us a fuckton of
@@ -139,22 +129,23 @@ void Robot::AutonomousInit() {
 
 	} else {
 		// drive forward for 2 seconds and stop
-		myRobot.Drive(0.75f, 0.0f);
+		myRobot.Drive(0.75, 0.0);
 		Wait(2);
-		myRobot.Drive(0.0f, 0.0f);
+		myRobot.Drive(0.0, 0.0);
 	}
 }
 
 void Robot::AutonomousPeriodic() {
-	if (autoSelected == autoGyroFun) {
-		frc::SmartDashboard::PutNumber("Gyro get measurement: ", gyro.GetAngle() - gyroAngle);
-		std::cout <<"gyro = " <<gyro.GetAngle() - gyroAngle <<std::endl;
+	/*
+	if (autoSelected == autoDoNothing) {
+		// NOP
 	} else {
 
 	}
+	*/
 
 	// put distance from ultrasonic in inches
-	frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
+	//frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
 
 }
 
@@ -186,27 +177,26 @@ void Robot::TeleopPeriodic() {
 	static bool slowable = true, isFast = true;
 
 	// Y switches directions
-	if (slowable && xBox.GetRawButton(4)) {
+	if (slowable && xBox.GetRawButton(6)) {
 		isForward = !isForward;
 		slowable = false;
-	} else if (!slowable && !xBox.GetRawButton(4)) {
+	} else if (!slowable && !xBox.GetRawButton(6)) {
 		slowable = true;
 	}
 
 
 	// joystick data from previous cycle
 	static struct vector2_t { // `static` keeps this local variable in memory
-		float x = 0, y = 0;
+		double x = 0, y = 0;
 	} stick;
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		utils::expReduceBrownout((isFast ? 1 : 0.25f) * (isForward ? -1 : 1)
+		utils::expReduceBrownout((isFast ? 1 : 0.25) * (isForward ? -1 : 1)
 								 * xBox.GetRawAxis(1), stick.y),
-		-utils::expReduceBrownout(xBox.GetRawAxis(4), stick.x) * 0.8f
+		-utils::expReduceBrownout(xBox.GetRawAxis(4), stick.x) * 0.8
 	);
 
-/*
 	// control the winch for climbing
 	static bool climb = false;
 
@@ -217,10 +207,10 @@ void Robot::TeleopPeriodic() {
 	// B stops climbing
 	} else if (xBox.GetRawButton(2))
 		climb = false;
-*/
+
 
 	// set it on or off depending on the value of climber.leftTrigger
-	winch.Set(climber.GetRawAxis(2) > 0.60 ? 1 : 0);
+	winch.Set(climb || climber.GetRawAxis(2) > 0.60 ? 1 : 0);
 
 
 	// put distance from ultrasonic in inches
@@ -229,8 +219,7 @@ void Robot::TeleopPeriodic() {
 }
 
 void Robot::RobotPeriodic(){
-		frc::SmartDashboard::PutBoolean("Gear: ", sonar.GetRangeInches() < 5);
-
+	//frc::SmartDashboard::PutBoolean("Gear: ", sonar.GetRangeInches() < 5);
 }
 
 START_ROBOT_CLASS(Robot)
