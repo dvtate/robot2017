@@ -51,7 +51,7 @@ namespace utils {
 
 	/// an exponential approach to preventing brown-out (also gives more reasonable responses)
 	/// averages in the previous value to make the change less drastic
-	// TODO: try using a cubic curve
+	// TODO: try using a cube-root/cubic/x^2 curve
 	inline double expReduceBrownout(const double current, double& past)
 		{ return unsignedSqrt(past = ((past + utils::removeGhost(current)) / 2)); }
 
