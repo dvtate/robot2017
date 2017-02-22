@@ -19,10 +19,6 @@ private:
 	Ultrasonic sonar;		 // distance probe
 	ADXRS450_Gyro gyro;		 // get angles and stuff
 
-	//Compressor airPump;	 // compressor
-	//DoubleSolenoid gearGrabber; // this is what holds the gear in place
-
-
 	frc::LiveWindow* lw = LiveWindow::GetInstance();
 
 	// multiple autonomous codes
