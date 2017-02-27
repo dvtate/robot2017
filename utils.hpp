@@ -53,14 +53,16 @@ namespace utils {
 	/// averages in the previous value to make the change less drastic
 	// TODO: try using a cube-root/cubic/x^2 curve
 	inline double expReduceBrownout(const double current, double& past)
-		{ return unsignedSqrt(past = ((past + utils::removeGhost(current)) / 2)); }
-
+		{ return current ? unsignedSqrt(past = ((past + utils::removeGhost(current)) / 2)) : 0.0; }
 
 
 	// turns the robot a set number of degrees
 	// make sure to zero the gyro before running this
 	void turnDegrees(RobotDrive mots, double (*getAngle)(), const double angle)
 	{
+
+		// note: this will get replaced with the PIDController class
+
 		// how often the turning value is calculated
 		#define RTD_DELAY 0.02
 
@@ -102,10 +104,8 @@ namespace utils {
 			else if (clockStarted && abs(turn) > RTD_TOLERANCE)
 				clockStarted = false;
 
-
 			// might want to wait a bit so turning actually does something
 			Wait(RTD_DELAY);
-
 
 		// while we haven't been in the tolerance zone for more than
 		} while (clockStarted && ((float)(clock() - toleranceTimer) / CLOCKS_PER_SEC) < 1);
@@ -116,9 +116,8 @@ namespace utils {
 		#undef RTD_TOLERANCE
 		#undef RTD_Kp
 		#undef RTD_KD
-
+		
 	}
 }
-
 
 #endif /* SRC_UTILS_HPP_ */
