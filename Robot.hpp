@@ -15,7 +15,6 @@ private:
 	RobotDrive myRobot; 	 // drive train
 	Joystick xBox, climber;			 // single xbox360 controller
 	VictorSP winch; 		 // used for climbing
-	DigitalInput winchLimit; // stops climbing when we get to the top
 	Ultrasonic sonar;		 // distance probe
 	ADXRS450_Gyro gyro;		 // get angles and stuff
 
