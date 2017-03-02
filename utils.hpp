@@ -55,7 +55,7 @@ namespace utils {
 	inline double expReduceBrownout(const double current, double& past)
 		{ return current ? unsignedPow2(past = ((past + utils::removeGhost(current)) / 2)) : 0.0; }
 
-
+/*
 	// turns the robot a set number of degrees
 	// make sure to zero the gyro before running this
 	void turnDegrees(RobotDrive& mots, ADXRS450_Gyro& gyro, const double angle)
@@ -125,6 +125,7 @@ namespace utils {
 		#undef RTD_KD
 
 	}
+	*/
 
 	void driveStraight(const double time, ADXRS450_Gyro& gyro, RobotDrive& mots){
 		#define DS_kP 0.03
