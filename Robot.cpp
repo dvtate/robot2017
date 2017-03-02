@@ -1,12 +1,14 @@
+#include <GripPipeline.hpp>
 #include "Robot.hpp"
 #include "utils.hpp"
-
+#include "GripPipeline.hpp"
 
 
 Robot::Robot():
 	myRobot(0, 1),		// drive train
+	//myRobot(2,3,0,1), // TESTING ONLY PLS REMOVE!!!!
 	xBox(0), climber(1),// xbox360 controller
-	winch(3),	   		// climbing motor
+	winch(2),	   		// climbing motor
 	winchLimit(2), 		// limit-switch for climbing
 	sonar(1, 0),		// ultrasonic range finder
 	gyro()
@@ -24,6 +26,7 @@ void Robot::RobotInit() {
 	chooser.AddObject(autoGoMiddle, autoGoMiddle);
 	chooser.AddObject(autoLeftTurnRight, autoLeftTurnRight);
 	chooser.AddObject(autoRightTurnLeft, autoRightTurnLeft);
+	chooser.AddObject(autoVisionTest, autoVisionTest);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
 	//get camera feed and post it to the smartdashboard
@@ -49,6 +52,9 @@ void Robot::AutonomousInit() {
 
 	if (autoSelected == autoDoNothing) {
 
+	} else if (autoSelected == autoVisionTest) {
+		//grip::GripPipeline camPipe;
+		//camPipe.Process();
 	// go to middle peg and deposit the gear
 	} else if (autoSelected == autoGoMiddle) {
 
@@ -208,9 +214,8 @@ void Robot::TeleopPeriodic() {
 	} else if (xBox.GetRawButton(2))
 		climb = false;
 
-
 	// set it on or off depending on the value of climber.leftTrigger
-	winch.Set(climb || climber.GetRawAxis(2) > 0.60 ? 1 : 0);
+	winch.Set(climb || (climber.GetRawAxis(3) > 0.60) ? 1 : 0);
 
 
 	// put distance from ultrasonic in inches
