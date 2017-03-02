@@ -26,9 +26,9 @@ private:
 	const std::string autoDriveForward = "drive forward 2s";
 	const std::string autoDoNothing = "sit and wait";
 	const std::string autoGoMiddle = "drive to middle peg";
-	const std::string autoGyroFun = "play with gyro :)";
 	const std::string autoLeftTurnRight = "start left goto the left peg";
 	const std::string autoRightTurnLeft = "start right goto the right peg";
+	const std::string autoVisionTest = "vision test";
 	std::string autoSelected;
 
 public:
