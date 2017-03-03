@@ -49,6 +49,10 @@ namespace utils {
 	inline double unsignedPow2(const double val)
 		{ return val > 0 ? pow(val, 2) : -pow(val, 2); }
 
+	/// we haz math 2 win
+	inline double huntFunt(const double val)
+		{ return val > 0 ? -cos(val * M_PI / 2) + 1 : -(-cos(val * M_PI / 2) + 1); }
+
 	/// an exponential approach to preventing brown-out (also gives more reasonable responses)
 	/// averages in the previous value to make the change less drastic
 	// TODO: try using a cube-root/cubic/x^2 curve
