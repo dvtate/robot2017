@@ -13,7 +13,7 @@ private:
 
 	// robot parts:
 	RobotDrive myRobot; 	 // drive train
-	Joystick xBox, climber;			 // single xbox360 controller
+	Joystick xBox, climber;  // single xbox360 controller
 	VictorSP winch; 		 // used for climbing
 	Ultrasonic sonar;		 // distance probe
 	ADXRS450_Gyro gyro;		 // get angles and stuff
