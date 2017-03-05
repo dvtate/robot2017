@@ -15,6 +15,7 @@ Robot::Robot():
 	myRobot.SetExpiration(0.1);
 }
 
+
 void Robot::RobotInit() {
 
 	std::cout <<"Robot On" <<std::endl;
@@ -56,7 +57,7 @@ void Robot::AutonomousInit() {
 		//camPipe.Process();
 	// go to middle peg and deposit the gear
 	} else if (autoSelected == autoGoMiddle) {
-
+/*
 		gyro.Reset();
 
 		#define GYRO_TURNING_CONST 0.03
@@ -74,6 +75,15 @@ void Robot::AutonomousInit() {
 		// out of the robots pocket and earn us a fuckton of
 		// points to start the game on a good footing
 
+		*/
+
+		// drive straight for 2 seconds @ 80% pwr
+		utils::driveStraight(gyro, myRobot, 2.25, 0.30);
+
+		// this is stupid code
+		//myRobot.Drive(0.8, 0.0);
+		//Wait(2);
+		myRobot.Drive(0.0, 0.0);
 	} else if (autoSelected == autoLeftTurnRight) {
 
 		// reset gyro
@@ -132,11 +142,16 @@ void Robot::AutonomousInit() {
 		// out of the robots pocket and earn us a fuckton of
 		// points to start the game on a good footing
 
-	} else {
-		// drive forward for 2 seconds and stop
-		myRobot.Drive(0.75, 0.0);
-		Wait(2);
+	// drive forward for 2 seconds and stop
+	} else if (autoSelected == autoDriveForward) {
+		// drive straight for 2 seconds @ 80% pwr
+		utils::driveStraight(gyro, myRobot, 2, 0.75);
+
+		// this is stupid code
+		//myRobot.Drive(0.8, 0.0);
+		//Wait(2);
 		myRobot.Drive(0.0, 0.0);
+
 	}
 }
 
