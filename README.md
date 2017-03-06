@@ -6,7 +6,8 @@ This is our primary cobot code.
  - we have spent 2 years perfecting our driving code, it has better consumption characteristics and behavior than the standard arcadeDrive function
   + `utils::removeGhost(double)`: removes input which could come from inacurate controllers
   + `utils::expReduceBrownout(double, double&)`: averages previous value in with the first one to make changes less extreme and round edges; plots calculated input onto a curve
-  + `utils::linReduceBrownout(double, double, dobule&)`: if the change in input value is too great it changes the change to the limit given. This hasn't been tested, but could be used in combination with `utils::expReduceBrownout`. 
+  + `utils::linReduceBrownout(double, double, dobule&)`: if the change in input value is too great it changes the change to the limit given. This hasn't been tested, but could be used in combination with `utils::expReduceBrownout`.
+
 ### Automatic Driver
  - Because the drive-train isn't perfect and the carpet doesn't give uniform traction, we can gain from being able to drive perfectly straight without veering off course.
  - `utils::driveStraight(ADXRS450_Gyro&, RobotDrive&, double, double)`: uses the angle measurement from the gyro as the turning value. Drives straight at a given speed for a given number of seconds
