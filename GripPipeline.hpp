@@ -27,7 +27,7 @@ class GripPipeline : public frc::VisionPipeline {
 		std::vector<std::vector<cv::Point> > findContoursOutput;
 		std::vector<std::vector<cv::Point> > filterContoursOutput;
 		void rgbThreshold(cv::Mat &, double [], double [], double [], cv::Mat &);
-		void findContours(cv::Mat &, bool , std::vector<std::vector<cv::Point> > &);
+		void findContours(cv::Mat &, const bool , std::vector<std::vector<cv::Point> > &);
 		void filterContours(std::vector<std::vector<cv::Point> > &, double , double , double , double , double , double , double [], double , double , double , double , std::vector<std::vector<cv::Point> > &);
 
 	public:
