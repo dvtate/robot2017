@@ -28,6 +28,7 @@ private:
 	const std::string autoLeftTurnRight = "start left goto the left peg";
 	const std::string autoRightTurnLeft = "start right goto the right peg";
 	const std::string autoVisionTest = "vision test";
+	const std::string autoGoDist = "drive until ultrasonic reads given value";
 	std::string autoSelected;
 
 public:
