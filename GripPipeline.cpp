@@ -2,63 +2,63 @@
 
 namespace grip {
 
-GripPipeline::GripPipeline() {
+	GripPipeline::GripPipeline() {
 
-}
-/**
-* Runs an iteration of the pipeline and updates outputs.
-*/
-void GripPipeline::Process(cv::Mat& source0){
-	//Step RGB_Threshold0:
-	//input
-	cv::Mat rgbThresholdInput = source0;
-	double rgbThresholdRed[] = {0.0, 255.0};
-	double rgbThresholdGreen[] = {213.26438848920864, 255.0};
-	double rgbThresholdBlue[] = {0.0, 255.0};
-	rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, this->rgbThresholdOutput);
-	//Step Find_Contours0:
-	//input
-	cv::Mat findContoursInput = rgbThresholdOutput;
-	bool findContoursExternalOnly = false;  // default Boolean
-	findContours(findContoursInput, findContoursExternalOnly, this->findContoursOutput);
-	//Step Filter_Contours0:
-	//input
-	std::vector<std::vector<cv::Point> > filterContoursContours = findContoursOutput;
-	double filterContoursMinArea = 1000.0;  // default Double
-	double filterContoursMinPerimeter = 0;  // default Double
-	double filterContoursMinWidth = 0;  // default Double
-	double filterContoursMaxWidth = 1000;  // default Double
-	double filterContoursMinHeight = 0;  // default Double
-	double filterContoursMaxHeight = 1000;  // default Double
-	double filterContoursSolidity[] = {0.0, 100.0};
-	double filterContoursMaxVertices = 1000000;  // default Double
-	double filterContoursMinVertices = 0;  // default Double
-	double filterContoursMinRatio = 0.0;  // default Double
-	double filterContoursMaxRatio = 1.0;  // default Double
-	filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, this->filterContoursOutput);
-}
+	}
+	/**
+	* Runs an iteration of the pipeline and updates outputs.
+	*/
+	void GripPipeline::Process(cv::Mat& source0){
+		//Step RGB_Threshold0:
+		//input
+		cv::Mat rgbThresholdInput = source0;
+		double rgbThresholdRed[] = {0.0, 255.0};
+		double rgbThresholdGreen[] = {213.26438848920864, 255.0};
+		double rgbThresholdBlue[] = {0.0, 255.0};
+		rgbThreshold(rgbThresholdInput, rgbThresholdRed, rgbThresholdGreen, rgbThresholdBlue, this->rgbThresholdOutput);
+		//Step Find_Contours0:
+		//input
+		cv::Mat findContoursInput = rgbThresholdOutput;
+		const bool findContoursExternalOnly = false;  // default Boolean
+		findContours(findContoursInput, findContoursExternalOnly, this->findContoursOutput);
+		//Step Filter_Contours0:
+		//input
+		std::vector<std::vector<cv::Point> > filterContoursContours = findContoursOutput;
+		const double filterContoursMinArea = 1000.0;  // default Double
+		const double filterContoursMinPerimeter = 0;  // default Double
+		const double filterContoursMinWidth = 0;  // default Double
+		const double filterContoursMaxWidth = 1000;  // default Double
+		const double filterContoursMinHeight = 0;  // default Double
+		const double filterContoursMaxHeight = 1000;  // default Double
+		double filterContoursSolidity[] = {0.0, 100.0};
+		const double filterContoursMaxVertices = 1000000;  // default Double
+		const double filterContoursMinVertices = 0;  // default Double
+		const double filterContoursMinRatio = 0.0;  // default Double
+		const double filterContoursMaxRatio = 1.0;  // default Double
+		filterContours(filterContoursContours, filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMaxWidth, filterContoursMinHeight, filterContoursMaxHeight, filterContoursSolidity, filterContoursMaxVertices, filterContoursMinVertices, filterContoursMinRatio, filterContoursMaxRatio, this->filterContoursOutput);
+	}
 
-/**
- * This method is a generated getter for the output of a RGB_Threshold.
- * @return Mat output from RGB_Threshold.
- */
-cv::Mat* GripPipeline::GetRgbThresholdOutput(){
-	return &(this->rgbThresholdOutput);
-}
-/**
- * This method is a generated getter for the output of a Find_Contours.
- * @return ContoursReport output from Find_Contours.
- */
-std::vector<std::vector<cv::Point> >* GripPipeline::GetFindContoursOutput(){
-	return &(this->findContoursOutput);
-}
-/**
- * This method is a generated getter for the output of a Filter_Contours.
- * @return ContoursReport output from Filter_Contours.
- */
-std::vector<std::vector<cv::Point> >* GripPipeline::GetFilterContoursOutput(){
-	return &(this->filterContoursOutput);
-}
+	/**
+	 * This method is a generated getter for the output of a RGB_Threshold.
+	 * @return Mat output from RGB_Threshold.
+	 */
+	cv::Mat* GripPipeline::GetRgbThresholdOutput(){
+		return &(this->rgbThresholdOutput);
+	}
+	/**
+	 * This method is a generated getter for the output of a Find_Contours.
+	 * @return ContoursReport output from Find_Contours.
+	 */
+	std::vector<std::vector<cv::Point> >* GripPipeline::GetFindContoursOutput(){
+		return &(this->findContoursOutput);
+	}
+	/**
+	 * This method is a generated getter for the output of a Filter_Contours.
+	 * @return ContoursReport output from Filter_Contours.
+	 */
+	std::vector<std::vector<cv::Point> >* GripPipeline::GetFilterContoursOutput(){
+		return &(this->filterContoursOutput);
+	}
 	/**
 	 * Segment an image based on color ranges.
 	 *
@@ -80,11 +80,11 @@ std::vector<std::vector<cv::Point> >* GripPipeline::GetFilterContoursOutput(){
 	 * @param externalOnly if only external contours are to be found.
 	 * @param contours vector of contours to put contours in.
 	 */
-	void GripPipeline::findContours(cv::Mat &input, bool externalOnly, std::vector<std::vector<cv::Point> > &contours) {
+	void GripPipeline::findContours(cv::Mat &input, const bool externalOnly, std::vector<std::vector<cv::Point> > &contours) {
 		std::vector<cv::Vec4i> hierarchy;
 		contours.clear();
-		int mode = externalOnly ? cv::RETR_EXTERNAL : cv::RETR_LIST;
-		int method = cv::CHAIN_APPROX_SIMPLE;
+		const int mode = externalOnly ? cv::RETR_EXTERNAL : cv::RETR_LIST;
+		const int method = cv::CHAIN_APPROX_SIMPLE;
 		cv::findContours(input, contours, hierarchy, mode, method);
 	}
 
