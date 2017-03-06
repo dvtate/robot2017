@@ -206,15 +206,13 @@ void Robot::TeleopPeriodic() {
 
 
 	// joystick data from previous cycle
-	static struct vector2_t { // `static` keeps this local variable in memory
-		double x = 0, y = 0;
-	} stick;
+	static double stickX = 0, stickY = 0; // `static` keeps this local variable in memory
 
 	// drive the robot
 	myRobot.ArcadeDrive(
 		utils::expReduceBrownout((isFast ? 1 : 0.25) * (isForward ? -1 : 1)
-								 * xBox.GetRawAxis(1), stick.y),
-		-utils::expReduceBrownout(xBox.GetRawAxis(4), stick.x) * 0.8
+								 * xBox.GetRawAxis(1), stickY),
+		-utils::expReduceBrownout(xBox.GetRawAxis(4), stickX) * 0.8
 	);
 
 	// control the winch for climbing
