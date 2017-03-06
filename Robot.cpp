@@ -1,7 +1,9 @@
+#include <time.h>
 #include <GripPipeline.hpp>
 #include "Robot.hpp"
 #include "utils.hpp"
 #include "GripPipeline.hpp"
+
 
 
 Robot::Robot():
@@ -21,12 +23,13 @@ void Robot::RobotInit() {
 	std::cout <<"Robot On" <<std::endl;
 
 	// autonomous chooser code
-	chooser.AddDefault(autoDoNothing, autoDoNothing);
-	chooser.AddObject(autoDriveForward, autoDriveForward);
-	chooser.AddObject(autoGoMiddle, autoGoMiddle);
-	chooser.AddObject(autoLeftTurnRight, autoLeftTurnRight);
-	chooser.AddObject(autoRightTurnLeft, autoRightTurnLeft);
-	chooser.AddObject(autoVisionTest, autoVisionTest);
+	chooser.AddDefault(autoDriveForward, autoDriveForward); // drive past baseline
+	chooser.AddObject(autoGoMiddle, autoGoMiddle); // middle peg
+	//chooser.AddObject(autoGoDist, autoGoDist);
+	chooser.AddObject(autoDoNothing, autoDoNothing); // don't do anything7
+	//chooser.AddObject(autoLeftTurnRight, autoLeftTurnRight);
+	//chooser.AddObject(autoRightTurnLeft, autoRightTurnLeft);
+	//chooser.AddObject(autoVisionTest, autoVisionTest);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
 	//get camera feed and post it to the smartdashboard
@@ -35,6 +38,8 @@ void Robot::RobotInit() {
 
 	// enable the ultrasonic sensor
 	sonar.SetAutomaticMode(true);
+
+	frc::SmartDashboard::GetNumber("Distance: ", 0);
 
 }
 
@@ -57,33 +62,17 @@ void Robot::AutonomousInit() {
 		//camPipe.Process();
 	// go to middle peg and deposit the gear
 	} else if (autoSelected == autoGoMiddle) {
-/*
-		gyro.Reset();
 
-		#define GYRO_TURNING_CONST 0.03
+		// drive until 8 inches from peg
 
-		// drive *straight* forward 24in from the middle peg
-		while (sonar.GetRangeInches() > 24) {
-			myRobot.Drive(0.4, GYRO_TURNING_CONST * -gyro.GetAngle());
-			Wait(0.004);
-		}
-
-		// stop moving
+		utils::driveStraight(gyro, myRobot, 2.9, 0.3);
 		myRobot.Drive(0.0, 0.0);
+
 
 		// at this point the human player would lift the gear
 		// out of the robots pocket and earn us a fuckton of
 		// points to start the game on a good footing
 
-		*/
-
-		// drive straight for 2 seconds @ 80% pwr
-		utils::driveStraight(gyro, myRobot, 2.25, 0.30);
-
-		// this is stupid code
-		//myRobot.Drive(0.8, 0.0);
-		//Wait(2);
-		myRobot.Drive(0.0, 0.0);
 	} else if (autoSelected == autoLeftTurnRight) {
 
 		// reset gyro
@@ -152,7 +141,18 @@ void Robot::AutonomousInit() {
 		//Wait(2);
 		myRobot.Drive(0.0, 0.0);
 
+	// drives until ultrasonic reads given value
+	} else if (autoSelected == autoGoDist) {
+		clock_t feedTimeout = clock();
+
+		// drive until given inches from peg
+		while (sonar.GetRangeInches() > frc::SmartDashboard::GetNumber("Distance: ", 0)
+			   && ((float)(clock() - feedTimeout) / CLOCKS_PER_SEC) < 4)
+			utils::driveStraight(gyro, myRobot, 0.06, 0.4);
+		myRobot.Drive(0.0, 0.0);
+
 	}
+
 }
 
 void Robot::AutonomousPeriodic() {
@@ -231,14 +231,16 @@ void Robot::TeleopPeriodic() {
 	// set it on or off depending on the value of climber.leftTrigger
 	winch.Set(climb || (climber.GetRawAxis(3) > 0.60) ? 1 : 0);
 
-
-	// put distance from ultrasonic in inches
-	frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
+	/*
+	// test ultrasonic
+	frc::SmartDashboard::PutNumber("Dist (recieved): ", sonar.GetRangeInches() + 1);
+	std::cout <<sonar.GetRangeInches() <<std::endl;
+	*/
 
 }
 
 void Robot::RobotPeriodic(){
-	//frc::SmartDashboard::PutBoolean("Gear: ", sonar.GetRangeInches() < 5);
+//	frc::SmartDashboard::PutNumber("Dist (recieved): ", sonar.GetRangeInches());
 }
 
 START_ROBOT_CLASS(Robot)
