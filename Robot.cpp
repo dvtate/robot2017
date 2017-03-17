@@ -7,8 +7,8 @@
 
 
 Robot::Robot():
-	myRobot(0, 4, 1, 3),// drive train
-	//myRobot(2,3,0,1), // TESTING ONLY PLS REMOVE!!!!
+	//myRobot(0, 4, 1, 3),// drive train
+	myRobot(2,3,0,1), // TESTING ONLY!!!!!!!!!
 	xBox(0), climber(1),// xbox360 controller
 	winch(2),	   		// climbing motor
 	sonar(1, 0),		// ultrasonic range finder
@@ -32,19 +32,19 @@ void Robot::RobotInit() {
 	//chooser.AddObject(autoVisionTest, autoVisionTest);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
-	//get camera feed and post it to the smartdashboard
-	CameraServer::GetInstance()->StartAutomaticCapture(0).SetResolution(640, 480);
+	//get USB camera feed and post it to the smartdashboard
+	cs::UsbCamera winchCam = CameraServer::GetInstance()->StartAutomaticCapture();
+	winchCam.SetResolution(640, 480);
 
 
 	// enable the ultrasonic sensor
 	sonar.SetAutomaticMode(true);
 
-	frc::SmartDashboard::GetNumber("Distance: ", 0);
-
 }
 
 
 void Robot::AutonomousInit() {
+
 
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
@@ -52,14 +52,44 @@ void Robot::AutonomousInit() {
 
 	autoSelected = chooser.GetSelected();
 
+	autoSelected = autoVisionTest;
+
+
 	// std::string autoSelected = SmartDashboard::GetString("Auto Selector", autoNameDefault);
 	std::cout << "Auto selected: " << autoSelected << std::endl;
 
 	if (autoSelected == autoDoNothing) {
 
 	} else if (autoSelected == autoVisionTest) {
-		//grip::GripPipeline camPipe;
-		//camPipe.Process();
+
+		// may need to change this...
+		CameraServer::GetInstance()->AddServer("visionCam");
+		cs::AxisCamera visionCam = CameraServer::GetInstance()->AddAxisCamera("10.49.41.20");
+		visionCam.SetResolution(640, 480);
+		visionCam.SetExposureAuto(); // will need to make manual...
+
+		cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
+		cs::CvSource outputStream = CameraServer::GetInstance()->
+						PutVideo("Rectangle", 640, 480);
+		cv::Mat img;
+		if (cvSink.GrabFrame(img) == 0) {
+			std::cerr <<"Error: Vision code failed to get video from camera :/\n";
+		}
+		grip::GripPipeline camPipe;
+
+		camPipe.Process(img);
+
+		std::cout <<"find contours output: " <<std::endl;
+
+		std::vector<std::vector<cv::Point> > filteredContours = *camPipe.GetFilterContoursOutput();
+		for (std::vector<cv::Point> contour : filteredContours) {
+			for (cv::Point coord : contour) {
+				std::cout <<'(' <<coord.x <<", " <<coord.y <<") ";
+			}
+			std::cout <<std::endl;
+		}
+
+
 	// go to middle peg and deposit the gear
 	} else if (autoSelected == autoGoMiddle) {
 
