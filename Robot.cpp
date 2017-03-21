@@ -8,11 +8,11 @@
 
 Robot::Robot():
 	myRobot(0, 4, 1, 3),// drive train
-	//myRobot(2,3,0,1), // TESTING ONLY!!!!!!!!!
+/*	//myRobot(2,3,0,1), // TESTING ONLY!!!!!!!!!
 	xBox(0), climber(1),// xbox360 controller
 	winch(2),	   		// climbing motor
 	sonar(1, 0),		// ultrasonic range finder (not on robot)
-	gyro()
+	gyro()*/
 {
 	myRobot.SetExpiration(0.1);
 }
@@ -45,7 +45,7 @@ void Robot::RobotInit() {
 
 
 void Robot::AutonomousInit() {
-
+/*
 
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
@@ -208,7 +208,7 @@ void Robot::AutonomousInit() {
 		myRobot.Drive(0.0, 0.0);
 
 	}
-
+*/
 }
 
 void Robot::AutonomousPeriodic() {
@@ -226,13 +226,13 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
-
+/*
 	std::cout <<"Teleop has begun :))\n";
 
 
 	// enable the motor controllers
 	myRobot.SetSafetyEnabled(false);
-
+*/
 
 }
 
@@ -246,7 +246,7 @@ void Robot::TeleopPeriodic() {
 	} else if (!dir_reversable && !xBox.GetRawButton(4))
 		dir_reversable = true;
 
-
+/*
 	// X toggles slow-mode
 	static bool slowable = true, isFast = true;
 	if (slowable && xBox.GetRawButton(6)) {
@@ -254,20 +254,20 @@ void Robot::TeleopPeriodic() {
 		slowable = false;
 	} else if (!slowable && !xBox.GetRawButton(6))
 		slowable = true;
-
+*/
 
 	// joystick data from previous cycle
 	static double stickX = 0, stickY = 0; // `static` keeps this local variable in memory
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		utils::expReduceBrownout((isFast ? 1 : 0.25) * (isForward ? -1 : 1)
+		utils::expReduceBrownout(0.65 * (isForward ? -1 : 1)
 								 * xBox.GetRawAxis(1), stickY),
 		-utils::expReduceBrownout(xBox.GetRawAxis(4), stickX) * 0.8
 	);
 
 
-
+/*
 	// control the winch for climbing
 	static bool climb = false;
 
@@ -284,7 +284,7 @@ void Robot::TeleopPeriodic() {
 
 	// test ultrasonic
 	//frc::SmartDashboard::PutNumber("Dist (recieved): ", sonar.GetRangeInches());
-
+*/
 }
 
 START_ROBOT_CLASS(Robot);
