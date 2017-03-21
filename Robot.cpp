@@ -261,7 +261,7 @@ void Robot::TeleopPeriodic() {
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		utils::expReduceBrownout((isFast ? 1 : 0.25) * (isForward ? -1 : 1)
+		utils::expReduceBrownout((isFast ? 1 : 0.7) * (isForward ? -1 : 1)
 								 * xBox.GetRawAxis(1), stickY),
 		-utils::expReduceBrownout(xBox.GetRawAxis(4), stickX) * 0.8
 	);
