@@ -11,7 +11,7 @@ Robot::Robot():
 	//myRobot(2,3,0,1), // TESTING ONLY!!!!!!!!!
 	xBox(0), climber(1),// xbox360 controller
 	winch(2),	   		// climbing motor
-	sonar(1, 0),		// ultrasonic range finder
+	sonar(1, 0),		// ultrasonic range finder (not on robot)
 	gyro()
 {
 	myRobot.SetExpiration(0.1);
@@ -95,13 +95,32 @@ void Robot::AutonomousInit() {
 			}
 			std::cout <<std::endl;
 		}
-		std::cout <<"Total of " <<filteredContours.size() <<"contours\n";
+		std::cout <<"Total - " <<filteredContours.size() <<"contours\n";
+
+		// find center of contour
+		struct avg_t { // useful for taking averages of positive numbers
+			unsigned long long total;
+			unsigned count;
+		} avgx, avgy;
+
+		for (size_t i = 0; i < filteredContours.size(); i++) {
+			avgx = avgy = { 0, 0 };
+			for (cv::Point coord : filteredContours[0]) {
+				avgx.total += coord.x;
+				avgx.count++;
+
+				avgy.total += coord.y;
+				avgy.count++;
+			}
+			std::cout	<<"Center of contour#" <<i <<" is: ("
+						<<(float) avgx.total / avgx.count <<", "
+						<<(float) avgy.total / avgy.count <<")\n";
+		}
 
 	// go to middle peg and deposit the gear
 	} else if (autoSelected == autoGoMiddle) {
 
-		// drive until 8 inches from peg
-
+		// drive straight 2.9 seconds @ 30% power
 		utils::driveStraight(gyro, myRobot, 2.9, 0.3);
 		myRobot.Drive(0.0, 0.0);
 
@@ -112,7 +131,7 @@ void Robot::AutonomousInit() {
 
 	} else if (autoSelected == autoLeftTurnRight) {
 
-		// reset gyro
+		// reset gyro to zero
 		gyro.Reset();
 
 		// drive forward 200in to the turning point
@@ -142,7 +161,7 @@ void Robot::AutonomousInit() {
 
 	} else if (autoSelected == autoLeftTurnRight) {
 
-		// reset gyro
+		// reset gyro to zero
 		gyro.Reset();
 
 		// drive forward 200in to the turning point
@@ -193,7 +212,7 @@ void Robot::AutonomousInit() {
 }
 
 void Robot::AutonomousPeriodic() {
-	/*
+	/* this isn't really applicable..
 	if (autoSelected == autoDoNothing) {
 		// NOP
 	} else {
@@ -219,27 +238,22 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 
-		// turn a button into a switch
-	static bool dir_reversable = true, isForward = true;
-
 	// Y switches directions
+	static bool dir_reversable = true, isForward = true;
 	if (dir_reversable && xBox.GetRawButton(4)) {
 		isForward = !isForward;
 		dir_reversable = false;
-	} else if (!dir_reversable && !xBox.GetRawButton(4)) {
+	} else if (!dir_reversable && !xBox.GetRawButton(4))
 		dir_reversable = true;
-	}
 
-	// turn a button into a switch
+
+	// X toggles slow-mode
 	static bool slowable = true, isFast = true;
-
-	// Y switches directions
 	if (slowable && xBox.GetRawButton(6)) {
-		isForward = !isForward;
+		isFast = !isFast;
 		slowable = false;
-	} else if (!slowable && !xBox.GetRawButton(6)) {
+	} else if (!slowable && !xBox.GetRawButton(6))
 		slowable = true;
-	}
 
 
 	// joystick data from previous cycle
@@ -251,6 +265,8 @@ void Robot::TeleopPeriodic() {
 								 * xBox.GetRawAxis(1), stickY),
 		-utils::expReduceBrownout(xBox.GetRawAxis(4), stickX) * 0.8
 	);
+
+
 
 	// control the winch for climbing
 	static bool climb = false;
@@ -266,16 +282,8 @@ void Robot::TeleopPeriodic() {
 	// set it on or off depending on the value of climber.leftTrigger
 	winch.Set(climb || (climber.GetRawAxis(3) > 0.60) ? 1 : 0);
 
-	/*
-	// test ultrasonic
-	frc::SmartDashboard::PutNumber("Dist (recieved): ", sonar.GetRangeInches() + 1);
-	std::cout <<sonar.GetRangeInches() <<std::endl;
-	*/
+	//frc::SmartDashboard::PutNumber("Dist (recieved): ", sonar.GetRangeInches());
 
 }
 
-void Robot::RobotPeriodic(){
-//	frc::SmartDashboard::PutNumber("Dist (recieved): ", sonar.GetRangeInches());
-}
-
-START_ROBOT_CLASS(Robot)
+START_ROBOT_CLASS(Robot);
