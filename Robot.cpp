@@ -63,31 +63,30 @@ void Robot::AutonomousInit() {
 		// NOP
 	} else if (autoSelected == autoVisionTest) {
 
-		// may need to change this...
-		cs::VideoSink visionServer = CameraServer::GetInstance()->AddServer("visionCam");
+		// set up the vision camera
 		cs::AxisCamera visionCam = CameraServer::GetInstance()->AddAxisCamera("69.254.10.224");
-		CameraServer::GetInstance()->StartAutomaticCapture(visionCam);
-
 		visionCam.SetResolution(640, 480);
 		visionCam.SetExposureAuto(); // will need to make manual...
 
-		cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo();
-		cs::CvSource outputStream = CameraServer::GetInstance()->
-						PutVideo("Rectangle", 640, 480);
+		// camera handle
+		cs::CvSink cvSink = CameraServer::GetInstance()->GetVideo(visionCam);
 
-		// take picture
+		// take a picture
 		cv::Mat img;
 		if (cvSink.GrabFrame(img) == 0) {
 			std::cerr <<"Error: Vision code failed to get video from camera :/\n";
+			return;
 		}
 
 		// process the picture
 		grip::GripPipeline camPipe;
 		camPipe.Process(img);
 
+
+
+
 		// display evidence of functionality
 		std::cout <<"find contours output: " <<std::endl;
-
 		std::vector<std::vector<cv::Point> >& filteredContours = *camPipe.GetFilterContoursOutput();
 		for (std::vector<cv::Point> contour : filteredContours) {
 			for (cv::Point coord : contour) {
@@ -282,6 +281,7 @@ void Robot::TeleopPeriodic() {
 	// set it on or off depending on the value of climber.leftTrigger
 	winch.Set(climb || (climber.GetRawAxis(3) > 0.60) ? 1 : 0);
 
+	// test ultrasonic
 	//frc::SmartDashboard::PutNumber("Dist (recieved): ", sonar.GetRangeInches());
 
 }
