@@ -14,6 +14,7 @@ private:
 	// robot parts:
 	RobotDrive myRobot; 	 // drive train
 	Joystick xBox, climber;  // single xbox360 controller
+/*
 	VictorSP winch; 		 // used for climbing
 	Ultrasonic sonar;		 // distance probe
 	ADXRS450_Gyro gyro;		 // get angles and stuff
@@ -30,7 +31,7 @@ private:
 	const std::string autoVisionTest = "vision test";
 	const std::string autoGoDist = "drive until ultrasonic reads given value";
 	std::string autoSelected;
-
+*/
 public:
 
 	Robot();
