@@ -98,9 +98,10 @@ void Robot::AutonomousInit() {
 
 		// find center of contour
 		struct avg_t { // useful for taking averages of positive numbers
-			unsigned long long total;
-			unsigned count;
+			unsigned long long total;	// sum of all values
+			unsigned count; 			// number to divide total by
 		} avgx, avgy;
+
 
 		for (size_t i = 0; i < filteredContours.size(); i++) {
 			avgx = avgy = { 0, 0 };
