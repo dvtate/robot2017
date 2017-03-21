@@ -36,7 +36,7 @@ public:
 	Robot();
 
 	void RobotInit() override;
-	void RobotPeriodic() override;
+	void RobotPeriodic() override {};
 
 	void AutonomousInit() override;
 	void AutonomousPeriodic() override;
@@ -54,7 +54,7 @@ public:
 	void DisabledPeriodic() override
 	{
 		// put distance from ultrasonic in inches
-		frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
+		//frc::SmartDashboard::PutNumber("Distance: ", sonar.GetRangeInches());
 	}
 
 
