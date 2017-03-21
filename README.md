@@ -30,4 +30,31 @@ This is our primary cobot code.
  - KISS = Keep It Simple Stupid
  - Have Fun :)
  - **You must be a RoboBibb Student to commit/PR.**
+
+# Hardware
+ ## Drive Train
+  - 6 sim drive-train
+  - 6 spark motor controllers
+  - using 4 pwm ports
+ ## Cameras
+  - front-facing AXIS 206 camera for vision
+  - rear-facing Lifecam HD 3000 
+ ## Winch
+  - We have a winch on the back of the robot for climbing, 25:1 gear ratio
+ ## Gyro
+
+# Current Functionality (summary, may be out of date):
+ ## Tele-op:
+  ### Controls: 
+   - 2 X-Box 360 controllers - one for driving, the other for climbing
+   - Driver - Y reverses the controls (forward-reverse swap)
+   - Driver - A activates the winch
+   - Driver - B stops the winch
+   - Driver - X toggles slow-mode (useful when accuracy is more important than speed)
+   - Driver - left stick is clutch, right stick is steering
+   - Climber - winch spins while trigger is pressed
+ ## Autonomous:
+  ### Middle Peg:
+   - Uses gyro to drive up to middle peg
+ 
  
