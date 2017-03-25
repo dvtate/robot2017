@@ -32,10 +32,9 @@ void Robot::RobotInit() {
 	chooser.AddObject(autoVisionTest, autoVisionTest);
 	frc::SmartDashboard::PutData("Auto Modes", &chooser);
 
-	//get USB camera feed and post it to the smartdashboard
+	//get USB camera feed and post it to the Java SmartDashboard
 	cs::UsbCamera winchCam = CameraServer::GetInstance()->StartAutomaticCapture(0);
-
-	winchCam.SetResolution(640, 480);
+	winchCam.SetResolution(320, 240);
 
 
 	// enable the ultrasonic sensor
@@ -120,8 +119,8 @@ void Robot::AutonomousInit() {
 	// go to middle peg and deposit the gear
 	} else if (autoSelected == autoGoMiddle) {
 
-		// drive straight 2.9 seconds @ 30% power
-		utils::driveStraight(gyro, myRobot, 2.9, 0.3);
+		// drive straight 3.3 seconds @ 30% power
+		utils::driveStraight(gyro, myRobot, 3.3, 0.3);
 		myRobot.Drive(0.0, 0.0);
 
 
@@ -261,7 +260,7 @@ void Robot::TeleopPeriodic() {
 
 	// drive the robot
 	myRobot.ArcadeDrive(
-		utils::expReduceBrownout((isFast ? 1 : 0.7) * (isForward ? -1 : 1)
+		utils::expReduceBrownout((isFast ? 1 : 1/*0.7*/) * (isForward ? -1 : 1)
 								 * xBox.GetRawAxis(1), stickY),
 		-utils::expReduceBrownout(xBox.GetRawAxis(4), stickX) * 0.8
 	);
