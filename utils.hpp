@@ -151,6 +151,27 @@ namespace utils {
 		#undef DE_kP
 		#undef DS_CYCLETIME
 	}
+
+	void driveStraight2(ADXRS450_Gyro& gyro, RobotDrive& mots, const double time, const double speed = 0.5){
+		#define DS_kP 0.03
+		#define DS_CYCLETIME 0.004
+		#define
+		// get angle to maintain as zero
+		gyro.Reset();
+
+		// drive forward for the set ammount of time
+		for (int i = (int) (time / (DS_CYCLETIME / speed)); i > 0; i--) {
+			// turn to correct heading
+			mots.Drive(speed, -gyro.GetAngle() * DS_kP); // add negatives for inverted steering/drive
+			Wait(DS_CYCLETIME);
+			frc::SmartDashboard::PutNumber("angle: ", gyro.GetAngle());
+		}
+
+		mots.Drive(0.0, 0.0);
+
+	}
+
+
 }
 
 
