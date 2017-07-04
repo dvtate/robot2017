@@ -104,7 +104,7 @@ void Robot::AutonomousInit() {
 
 		for (size_t i = 0; i < filteredContours.size(); i++) {
 			avgx = avgy = { 0, 0 };
-			for (cv::Point coord : filteredContours[0]) {
+			for (cv::Point coord : filteredContours[i]) {
 				avgx.total += coord.x;
 				avgx.count++;
 
@@ -190,11 +190,7 @@ void Robot::AutonomousInit() {
 	} else if (autoSelected == autoDriveForward) {
 		// drive straight for 2 seconds @ 80% pwr
 		utils::driveStraight(gyro, myRobot, 2, 0.75);
-
-		// this is stupid code
-		//myRobot.Drive(0.8, 0.0);
-		//Wait(2);
-		myRobot.Drive(0.0, 0.0);
+		myRobot.Drive(0.0, 0.0); // stop
 
 	// drives until ultrasonic reads given value
 	} else if (autoSelected == autoGoDist) {
@@ -207,7 +203,6 @@ void Robot::AutonomousInit() {
 		myRobot.Drive(0.0, 0.0);
 
 	}
-
 }
 
 void Robot::AutonomousPeriodic() {
