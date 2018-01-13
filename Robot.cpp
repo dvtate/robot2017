@@ -8,7 +8,6 @@
 
 Robot::Robot():
 	myRobot(0, 4, 1, 3),// drive train
-	//myRobot(2,3,0,1), // TESTING ONLY!!!!!!!!!
 	xBox(0), climber(1),// xbox360 controller
 	winch(2),	   		// climbing motor
 	sonar(1, 0),		// ultrasonic range finder (not on robot)
