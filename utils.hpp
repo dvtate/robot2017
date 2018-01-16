@@ -132,8 +132,7 @@ namespace utils {
 	*/
 
 	void driveStraight(ADXRS450_Gyro& gyro, RobotDrive& mots, const double time, const double speed = 0.5){
-		#define DS_kP 0.03
-		#define DS_CYCLETIME 0.004
+		const double DS_kP = 0.03, DS_CYCLETIME = 0.004;
 
 		// get angle to maintain as zero
 		gyro.Reset();
@@ -148,13 +147,10 @@ namespace utils {
 
 		mots.Drive(0.0, 0.0);
 
-		#undef DE_kP
-		#undef DS_CYCLETIME
 	}
 
 	void driveStraight2(ADXRS450_Gyro& gyro, RobotDrive& mots, const double time, const double speed = 0.5){
-		#define DS_kP 0.03
-		#define DS_CYCLETIME 0.004
+		const double DS_kP = 0.03, DS_CYCLETIME = 0.004;
 
 		// get angle to maintain as zero
 		gyro.Reset();
