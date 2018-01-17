@@ -15,6 +15,7 @@ namespace utils {
 
 
 	/// a linear approach to preventing brownout (untested)
+	// prevents input from changing faster than a certain rate
 	// could probably be combined with expReduceBrounout to improve effectiveness
 	double linReduceBrownout(const double limit, const double current, double& past)
 	{
@@ -148,7 +149,7 @@ namespace utils {
 		mots.Drive(0.0, 0.0);
 
 	}
-
+	// should be more accurate, but untested
 	void driveStraight2(ADXRS450_Gyro& gyro, RobotDrive& mots, const double time, const double speed = 0.5){
 		const double DS_kP = 0.03, DS_CYCLETIME = 0.004;
 
